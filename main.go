@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-//the one who emits the data
+//the function who send data to the first stage
 func source(numbers ...int) <-chan int {
 	out := make(chan int)
 	go func() {
@@ -18,15 +18,14 @@ func source(numbers ...int) <-chan int {
 }
 
 /*
-	There are the stages. Each one represents the phases of the workchain
-	As you can see ,all ones has the same input and output type: channels
+	The stages. Each one represents the phases of the workchain
+	As you can see, all of them has the same input and output type: channels
 */
-
 func firstStage(in <-chan int) <-chan int {
 	out := make(chan int)
 	go func() {
 		for n := range in {
-			out <- n
+			out <- n + 2 //we transform the data and send to the channel
 		}
 		close(out)
 	}()
@@ -55,7 +54,7 @@ func thirdStage(in <-chan int) <-chan int {
 	return out
 }
 
-//end this receives all the data and presents it the way you want
+//end receives all the data and presents it the way you want
 func end(in <-chan int) []int {
 	out := make([]int, 0)
 
@@ -76,7 +75,7 @@ func end(in <-chan int) []int {
 }
 
 func main() {
-	// Set up the pipeline and consume the output.
+	//we set up the pipeline (this requires to nest every stage into the next one) -> not easy to read
 	for _, n := range end(thirdStage(secondStage(firstStage(source(2, 3, 2, 34))))) {
 		fmt.Println(n)
 	}
