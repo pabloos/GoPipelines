@@ -5,8 +5,10 @@ import (
 	"sync"
 )
 
+type pipe <-chan int
+
 //the function who send data to the first stage
-func source(numbers ...int) <-chan int {
+func source(numbers ...int) pipe {
 	out := make(chan int)
 	go func() {
 		for _, n := range numbers {
@@ -21,7 +23,7 @@ func source(numbers ...int) <-chan int {
 	The stages. Each one represents the phases of the workchain
 	As you can see, all of them has the same input and output type: channels
 */
-func firstStage(in <-chan int) <-chan int {
+func firstStage(in pipe) pipe {
 	out := make(chan int)
 	go func() {
 		for n := range in {
@@ -32,7 +34,7 @@ func firstStage(in <-chan int) <-chan int {
 	return out
 }
 
-func secondStage(in <-chan int) <-chan int {
+func secondStage(in pipe) pipe {
 	out := make(chan int)
 	go func() {
 		for n := range in {
@@ -43,7 +45,7 @@ func secondStage(in <-chan int) <-chan int {
 	return out
 }
 
-func thirdStage(in <-chan int) <-chan int {
+func thirdStage(in pipe) pipe {
 	out := make(chan int)
 	go func() {
 		for n := range in {
@@ -55,7 +57,7 @@ func thirdStage(in <-chan int) <-chan int {
 }
 
 //end receives all the data and presents it the way you want
-func end(in <-chan int) []int {
+func end(in pipe) []int {
 	out := make([]int, 0)
 
 	var wg sync.WaitGroup
