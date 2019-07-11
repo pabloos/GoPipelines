@@ -6,12 +6,12 @@ import (
 )
 
 type (
-	pipe        <-chan int
-	stage       func(in pipe, t transformer) pipe
-	transformer func(int) int
+	pipe    <-chan int
+	stage   func(in pipe, t functor) pipe
+	functor func(int) int
 )
 
-func sender(outChan chan int, inChan pipe, t transformer) {
+func sender(outChan chan int, inChan pipe, t functor) {
 	for n := range inChan {
 		outChan <- t(n)
 	}
@@ -50,19 +50,19 @@ func end(in pipe) []int {
 	return out
 }
 
-func firstStage(in pipe, t transformer) pipe {
+func firstStage(in pipe, t functor) pipe {
 	out := make(chan int)
 	go sender(out, in, t)
 	return out
 }
 
-func secondStage(in pipe, t transformer) pipe {
+func secondStage(in pipe, t functor) pipe {
 	out := make(chan int)
 	go sender(out, in, t)
 	return out
 }
 
-func thirdStage(in pipe, t transformer) pipe {
+func thirdStage(in pipe, t functor) pipe {
 	out := make(chan int)
 	go sender(out, in, t)
 	return out
