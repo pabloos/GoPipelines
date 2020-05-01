@@ -30,7 +30,7 @@ func Test_add2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := add2(tt.args.number); got != tt.want {
+			if got := addTo(2)(tt.args.number); got != tt.want {
 				t.Errorf("add2() = %v, want %v", got, tt.want)
 			}
 		})

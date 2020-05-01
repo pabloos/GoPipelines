@@ -3,35 +3,19 @@ package main
 import "fmt"
 
 func main() {
-	input := []int{1, 3, 2}
+	numbers := []int{1, 2, 3}
 
-	startStage := start(input...)
+	input := Converter(numbers...)
 
-	identityStage := getStage(identity)
+	firstStage := NewTube(identity)(input)
 
-	squareStage := getStage(square)
+	mediumStage := FanOut(firstStage, RoundRobin, NewTube(double), NewTube(square))
 
-	cubeStage := getStage(cube)
+	merged := FanIn(mediumStage...)
 
-	startPipeline := cubeStage(squareStage(identityStage(startStage)))
+	finalStage := NewTube(divideBy(2))(merged)
 
-	channelArray := split(startPipeline, 2, roundRobin)
-
-	doubleStage := getStage(double)
-
-	secondPipeline := doubleStage(channelArray[0])
-
-	squareStage2 := getStage(square)
-
-	thirdPipeline := squareStage2(channelArray[1])
-
-	finalPipelineStart := merge(secondPipeline, thirdPipeline)
-
-	identity2Stage := getStage(identity)
-
-	finalPip := identity2Stage(finalPipelineStart)
-
-	result := final(finalPip)
+	result := Sink(finalStage)
 
 	fmt.Println(result)
 }

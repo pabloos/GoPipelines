@@ -4,7 +4,8 @@ import (
 	"sync"
 )
 
-func merge(pipes ...pipe) pipe {
+// FanIn merges n pipes to 1
+func FanIn(pipes ...pipe) pipe {
 	var wg sync.WaitGroup
 
 	out := make(pipe)

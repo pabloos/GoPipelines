@@ -23,8 +23,8 @@ func TestPipeline_Exec(t *testing.T) {
 		{
 			name: "One Stage case",
 			fields: fields{
-				start,
-				final,
+				Converter,
+				Sink,
 				genStages(func(number int) int {
 					return number + 1
 				}),
@@ -41,8 +41,8 @@ func TestPipeline_Exec(t *testing.T) {
 		{
 			name: "Various stages case",
 			fields: fields{
-				start,
-				final,
+				Converter,
+				Sink,
 				genStages(
 					func(number int) int {
 						return number + 1
@@ -94,8 +94,8 @@ func TestRecursivePipeline_Exec(t *testing.T) {
 		{
 			name: "One Stage case",
 			fields: fields{
-				start,
-				final,
+				Converter,
+				Sink,
 				genStages(func(number int) int {
 					return number + 1
 				}),
@@ -112,8 +112,8 @@ func TestRecursivePipeline_Exec(t *testing.T) {
 		{
 			name: "Various stages case",
 			fields: fields{
-				start,
-				final,
+				Converter,
+				Sink,
 				genStages(
 					func(number int) int {
 						return number + 1
