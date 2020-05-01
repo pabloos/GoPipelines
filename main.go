@@ -7,31 +7,27 @@ func main() {
 
 	startStage := start(input...)
 
-	identityStage := getStage(identity)
+	firstPipeline := NewTube(identity, square, cube)
 
-	squareStage := getStage(square)
+	firstPhase := firstPipeline(startStage)
 
-	cubeStage := getStage(cube)
+	channelArray := split(firstPhase, 2, roundRobin)
 
-	startPipeline := cubeStage(squareStage(identityStage(startStage)))
+	secondPipeline := NewTube(double)
 
-	channelArray := split(startPipeline, 2, roundRobin)
+	secondPhase := secondPipeline(channelArray[0])
 
-	doubleStage := getStage(double)
+	thirdPipeline := NewTube(square)
 
-	secondPipeline := doubleStage(channelArray[0])
+	thirdPhase := thirdPipeline(channelArray[1])
 
-	squareStage2 := getStage(square)
+	finalPipelineStart := merge(secondPhase, thirdPhase)
 
-	thirdPipeline := squareStage2(channelArray[1])
+	forthPipeline := NewTube(identity)
 
-	finalPipelineStart := merge(secondPipeline, thirdPipeline)
+	forthPhase := forthPipeline(finalPipelineStart)
 
-	identity2Stage := getStage(identity)
-
-	finalPip := identity2Stage(finalPipelineStart)
-
-	result := final(finalPip)
+	result := final(forthPhase)
 
 	fmt.Println(result)
 }
