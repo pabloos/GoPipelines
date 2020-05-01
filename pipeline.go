@@ -2,13 +2,13 @@ package main
 
 type (
 	functor func(int) int
-	pipe    <-chan int
+	pipe    chan int //we need a generic channel
 	source  func(...int) pipe
 	end     func(pipe) []int
 	stage   func(pipe) pipe
 	stages  []stage
 
-	//Pipeline contains the start and the end of the himself and all his stages
+	//Pipeline contains the start and the end of himself and all his stages
 	Pipeline struct {
 		source
 		stages
@@ -56,7 +56,7 @@ func genStages(functors ...functor) stages {
 
 func getStage(funct functor) stage {
 	return func(input pipe) pipe {
-		output := make(chan int)
+		output := make(pipe)
 
 		go send(output, input, funct)
 
@@ -64,7 +64,7 @@ func getStage(funct functor) stage {
 	}
 }
 
-func send(outChan chan int, inChan pipe, mod functor) {
+func send(outChan pipe, inChan pipe, mod functor) {
 	for n := range inChan {
 		outChan <- mod(n)
 	}
