@@ -10,7 +10,7 @@ func fanOut(input pipe, scheduler Scheduler, tubes ...Tube) (output []pipe) {
 		output = append(output, tubes[i](cs[i]))
 	}
 
-	go scheduler(input, cs)
+	go schedule(scheduler)(input, cs)
 
 	return output
 }

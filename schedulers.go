@@ -5,7 +5,7 @@ type Scheduler func(pipe, []pipe)
 
 // Schedule prepares a scheduler to operate:
 // - it injects the close channel action by a decorator pattern
-func Schedule(scheduler Scheduler) Scheduler {
+func schedule(scheduler Scheduler) Scheduler {
 	return func(ch pipe, cs []pipe) {
 		defer closeChannels(cs)
 

@@ -13,7 +13,7 @@ func main() {
 
 	firstPhase := firstPipeline(startStage)
 
-	channelArray := fanOut(firstPhase, Schedule(RoundRobin), secondPipeline, thirdPipeline)
+	channelArray := fanOut(firstPhase, RoundRobin, secondPipeline, thirdPipeline)
 
 	finalPipelineStart := merge(channelArray...)
 
