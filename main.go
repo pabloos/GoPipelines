@@ -3,27 +3,21 @@ package main
 import "fmt"
 
 func main() {
-	input := []int{1, 3, 2}
+	input := []int{1, 3, 2, 3}
 
 	startStage := start(input...)
 
-	firstPipeline := NewTube(identity, square, cube)
+	firstPipeline := NewTube(identity)
+	secondPipeline := NewTube(double)
+	thirdPipeline := NewTube(square)
 
 	firstPhase := firstPipeline(startStage)
 
-	channelArray := split(firstPhase, 2, roundRobin)
+	channelArray := fanOut(firstPhase, RoundRobin, secondPipeline, thirdPipeline)
 
-	secondPipeline := NewTube(double)
+	finalPipelineStart := merge(channelArray...)
 
-	secondPhase := secondPipeline(channelArray[0])
-
-	thirdPipeline := NewTube(square)
-
-	thirdPhase := thirdPipeline(channelArray[1])
-
-	finalPipelineStart := merge(secondPhase, thirdPhase)
-
-	forthPipeline := NewTube(identity)
+	forthPipeline := NewTube(double)
 
 	forthPhase := forthPipeline(finalPipelineStart)
 
