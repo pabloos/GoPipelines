@@ -1,6 +1,6 @@
 package main
 
-// fanOut distribute through
+// FanOut distribute through
 func FanOut(input pipe, scheduler Scheduler, tubes ...Tube) (output []pipe) {
 	cs := make([]pipe, 0)
 
