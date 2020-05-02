@@ -1,7 +1,7 @@
 package main
 
 // fanOut distribute through
-func fanOut(input pipe, scheduler Scheduler, tubes ...Tube) (output []pipe) {
+func FanOut(input pipe, scheduler Scheduler, tubes ...Tube) (output []pipe) {
 	cs := make([]pipe, 0)
 
 	for i := 0; i < len(tubes); i++ {

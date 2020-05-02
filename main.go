@@ -13,9 +13,9 @@ func main() {
 
 	firstPhase := firstPipeline(startStage)
 
-	channelArray := fanOut(firstPhase, RoundRobin, secondPipeline, thirdPipeline)
+	channelArray := FanOut(firstPhase, RoundRobin, secondPipeline, thirdPipeline)
 
-	finalPipelineStart := merge(channelArray...)
+	finalPipelineStart := FanIn(channelArray...)
 
 	forthPipeline := NewTube(double)
 
