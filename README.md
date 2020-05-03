@@ -8,8 +8,6 @@ This repo contains an approach of Golang's Pipelines and its features. It's orga
 3. autogen-stages
 4. fanInfanOut
 
-The master branch keeps the most recent version that doesn't be in relation with pipelines pattern itself (this readme, renames ...)
-
 ## Some background
 
 This repo exists because the first post in [my blog](https://pabloos.github.io/concurrency/pipelines/), where I explain the pattern.
@@ -33,7 +31,7 @@ A simple example:
 ```go
 numbers := []int{1, 2, 3}
 
-input := int2pipe(numbers...)
+input := Converter(numbers...)
 
 firstStage := NewTube(identity)(input)
 
