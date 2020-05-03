@@ -1,6 +1,8 @@
 
 # Golang Pipelines
 
+![Actions Status](https://github.com/pabloos/Go-Pipelines/workflows/tests/badge.svg)
+
 This repo contains an approach of Golang's Pipelines and its features. It's organized on branches, so you can go through the different milestones:
 
 1. original-sketch: the original approach discussed on the [go blog](https://blog.golang.org/pipelines)
