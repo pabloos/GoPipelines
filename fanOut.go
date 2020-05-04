@@ -1,11 +1,11 @@
 package main
 
 // FanOut distribute through
-func FanOut(input pipe, scheduler Scheduler, tubes ...Tube) (output []pipe) {
-	cs := make([]pipe, 0)
+func FanOut(input flow, scheduler Scheduler, tubes ...stage) (output []flow) {
+	cs := make([]flow, 0)
 
 	for i := 0; i < len(tubes); i++ {
-		cs = append(cs, make(pipe))
+		cs = append(cs, make(flow))
 
 		output = append(output, tubes[i](cs[i]))
 	}

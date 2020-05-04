@@ -7,13 +7,13 @@ func main() {
 
 	input := Converter(numbers...)
 
-	firstStage := NewTube(identity)(input)
+	firstStage := NewPipeline(identity)(input)
 
-	mediumStage := FanOut(firstStage, RoundRobin, NewTube(double), NewTube(square))
+	mediumStage := FanOut(firstStage, RoundRobin, NewPipeline(double), NewPipeline(square))
 
 	merged := FanIn(mediumStage...)
 
-	finalStage := NewTube(divideBy(2))(merged)
+	finalStage := NewPipeline(divideBy(2))(merged)
 
 	result := Sink(finalStage)
 

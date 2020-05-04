@@ -4,22 +4,22 @@ import (
 	"sync"
 )
 
-// FanIn merges n pipes to 1
-func FanIn(pipes ...pipe) pipe {
+// FanIn merges n flows to 1
+func FanIn(flows ...flow) flow {
 	var wg sync.WaitGroup
 
-	out := make(pipe)
+	out := make(flow)
 
-	send := func(c pipe) {
+	send := func(c flow) {
 		for n := range c {
 			out <- n
 		}
 		wg.Done()
 	}
 
-	wg.Add(len(pipes))
+	wg.Add(len(flows))
 
-	for _, c := range pipes { // start a send goroutine for each input channel in pipes.
+	for _, c := range flows { // start a send goroutine for each input channel in flows.
 		go send(c)
 	}
 

@@ -3,7 +3,7 @@ package main
 import "sync"
 
 // Sink transforms the input channel values to an array
-func Sink(inputs pipe) []int {
+func Sink(inputs flow) []int {
 	out := make([]int, 0)
 
 	var wg sync.WaitGroup

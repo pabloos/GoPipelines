@@ -1,8 +1,8 @@
 package main
 
 type (
-	pipe   chan int //we need a generic channel
-	stage  func(pipe) pipe
+	flow   chan int //we need a generic channel
+	stage  func(flow) flow
 	stages []stage
 )
 
@@ -17,8 +17,8 @@ func genStages(functors ...functor) stages {
 }
 
 func getStage(funct functor) stage {
-	return func(input pipe) pipe {
-		output := make(pipe)
+	return func(input flow) flow {
+		output := make(flow)
 
 		go send(output, input, funct)
 
@@ -26,7 +26,7 @@ func getStage(funct functor) stage {
 	}
 }
 
-func send(outChan pipe, inChan pipe, mod functor) {
+func send(outChan flow, inChan flow, mod functor) {
 	for n := range inChan {
 		outChan <- mod(n)
 	}
@@ -36,8 +36,8 @@ func send(outChan pipe, inChan pipe, mod functor) {
 
 func createBufStage(bufLen int) func(functor) stage {
 	return func(funct functor) stage {
-		return func(input pipe) pipe {
-			output := make(pipe, bufLen)
+		return func(input flow) flow {
+			output := make(flow, bufLen)
 
 			go send(output, input, funct)
 

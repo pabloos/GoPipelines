@@ -1,147 +1,72 @@
 package main
 
 import (
-	"reflect"
 	"testing"
 )
 
-func TestPipeline_Exec(t *testing.T) {
-	type fields struct {
-		source source
-		end    end
-		stages stages
-	}
+func TestNewPipeline(t *testing.T) {
 	type args struct {
-		input []int
+		functors []functor
 	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   []int
-	}{
-		{
-			name: "One Stage case",
-			fields: fields{
-				Converter,
-				Sink,
-				genStages(func(number int) int {
-					return number + 1
-				}),
-			},
-			args: args{
-				input: []int{
-					1, 2, 3,
-				},
-			},
-			want: []int{
-				2, 3, 4,
-			},
-		},
-		{
-			name: "Various stages case",
-			fields: fields{
-				Converter,
-				Sink,
-				genStages(
-					func(number int) int {
-						return number + 1
-					},
-					func(number int) int {
-						return number * 2
-					},
-				),
-			},
-			args: args{
-				input: []int{
-					1, 2, 3,
-				},
-			},
-			want: []int{
-				4, 6, 8,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			pip := &Pipeline{
-				source: tt.fields.source,
-				stages: tt.fields.stages,
-				end:    tt.fields.end,
-			}
-			if got := pip.Exec(tt.args.input...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Pipeline.Exec() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
-func TestRecursivePipeline_Exec(t *testing.T) {
-	type fields struct {
-		source source
-		end    end
-		stages stages
-	}
-	type args struct {
-		input []int
-	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   []int
+		name  string
+		args  args
+		want  []int
+		input []int
 	}{
 		{
-			name: "One Stage case",
-			fields: fields{
-				Converter,
-				Sink,
-				genStages(func(number int) int {
-					return number + 1
-				}),
-			},
+			name: "zero input value",
 			args: args{
-				input: []int{
-					1, 2, 3,
+				functors: []functor{
+					double,
 				},
 			},
+			input: []int{},
+			want:  []int{},
+		},
+		{
+			name: "one input value",
+			args: args{
+				functors: []functor{
+					double,
+				},
+			},
+			input: []int{
+				1,
+			},
 			want: []int{
-				3, 4, 5,
+				2,
 			},
 		},
 		{
-			name: "Various stages case",
-			fields: fields{
-				Converter,
-				Sink,
-				genStages(
-					func(number int) int {
-						return number + 1
-					},
-					func(number int) int {
-						return number * 2
-					},
-				),
-			},
+			name: "multiple input values",
 			args: args{
-				input: []int{
-					1, 2, 3,
+				functors: []functor{
+					double,
 				},
 			},
+			input: []int{
+				1, 2, 3,
+			},
 			want: []int{
-				10, 14, 18,
+				2, 4, 6,
 			},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pip := &Pipeline{
-				source: tt.fields.source,
-				stages: tt.fields.stages,
-				end:    tt.fields.end,
-			}
-			if got := pip.Exec(pip.Exec(tt.args.input...)...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Pipeline.Exec() = %v, want %v", got, tt.want)
+			i := Converter(tt.input...)
+
+			pip := NewPipeline(tt.args.functors...)(i)
+
+			got := Sink(pip)
+
+			for i, valueGotten := range got {
+				if valueGotten != tt.want[i] {
+					t.Errorf("NewPipeline() = %v, want %v", got, tt.want)
+				}
 			}
 		})
 	}
