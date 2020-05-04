@@ -4,7 +4,33 @@ import (
 	"testing"
 )
 
+func TestFanInFanOut(t *testing.T) {
+	numbers := []int{1, 2, 3}
+
+	input := Converter(numbers...)
+
+	firstStage := NewPipeline(identity)(input)
+
+	secondStage := FanOut(firstStage, RoundRobin, NewPipeline(double), NewPipeline(square))
+
+	merged := FanIn(secondStage...)
+
+	thirdStage := NewPipeline(divideBy(2))(merged)
+
+	result := Sink(thirdStage)
+
+	want := []int{1, 2, 3}
+
+	for i, number := range result {
+		if number != want[i] {
+			t.Errorf("NewPipeline() = %v, want %v", number, want[i])
+		}
+	}
+}
+
 func TestNewPipeline(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		functors []functor
 	}
