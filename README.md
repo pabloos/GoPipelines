@@ -37,13 +37,13 @@ input := Converter(numbers...)
 
 firstStage := NewPipeline(identity)(input)
 
-mediumStage := FanOut(firstStage, RoundRobin, NewPipeline(double), NewPipeline(square))
+secondStage := FanOut(firstStage, RoundRobin, NewPipeline(double), NewPipeline(square))
 
-merged := FanIn(mediumStage...)
+merged := FanIn(secondStage...)
 
-finalStage := NewPipeline(divideBy(2))(merged)
+thirdStage := NewPipeline(divideBy(2))(merged)
 
-result := Sink(finalStage)
+result := Sink(thirdStage)
 
 fmt.Println(result)
 ```
