@@ -4,16 +4,19 @@ import (
 	"sync"
 )
 
+// TODO implements a decorator that cares about the order of delivery order of inputs
+// following the strategy defined by the user ([pre, in, post] - order => as it comes, tree-based, stacked)
+
 // FanIn merges n flows to 1
-func FanIn(flows ...flow) flow {
+func FanIn(flows ...Flow) Flow {
 	var wg sync.WaitGroup
 
-	out := make(flow)
+	out := make(Flow)
 
-	send := func(c flow) {
-		for n := range c {
-			out <- n
-		}
+	// TODO insert cancellation login here
+	send := func(c Flow) {
+		send(out, c, identity)
+
 		wg.Done()
 	}
 

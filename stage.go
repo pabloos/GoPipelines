@@ -1,9 +1,10 @@
 package pipelines
 
 type (
-	flow   chan int //we need a generic channel
-	stage  func(flow) flow
-	stages []stage
+	// Stage represents the different phases of a Pipeline, which it's a Stage itself
+	Stage func(Flow) Flow
+
+	stages []Stage
 )
 
 func genStages(functors ...functor) stages {
@@ -16,30 +17,27 @@ func genStages(functors ...functor) stages {
 	return stages
 }
 
-func getStage(funct functor) stage {
-	return func(input flow) flow {
-		output := make(flow)
+func getStage(funct functor) Stage {
+	sender := sendAndClose(send, closeFlow)
 
-		go send(output, input, funct)
+	return func(input Flow) Flow {
+		output := make(Flow)
+
+		go sender(output, input, funct)
 
 		return output
 	}
 }
 
-func send(outChan flow, inChan flow, mod functor) {
-	for n := range inChan {
-		outChan <- mod(n)
-	}
+// TODO insert cancellation logic here
+func createBufStage(bufLen int) func(functor) Stage {
+	sender := sendAndClose(send, closeFlow)
 
-	close(outChan)
-}
+	return func(funct functor) Stage {
+		return func(input Flow) Flow {
+			output := make(Flow, bufLen)
 
-func createBufStage(bufLen int) func(functor) stage {
-	return func(funct functor) stage {
-		return func(input flow) flow {
-			output := make(flow, bufLen)
-
-			go send(output, input, funct)
+			go sender(output, input, funct)
 
 			return output
 		}

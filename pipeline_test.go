@@ -1,9 +1,12 @@
 package pipelines
 
 import (
+	"reflect"
 	"testing"
 )
 
+// TODO non deterministc aproach
+// tests runs in a deterministc way, while fan in and out does it with a non deterministic deliver order
 func TestFanInFanOut(t *testing.T) {
 	numbers := []int{1, 2, 3}
 
@@ -19,12 +22,13 @@ func TestFanInFanOut(t *testing.T) {
 
 	result := Sink(thirdStage)
 
-	want := []int{1, 2, 3}
+	t.Log(result)
 
-	for i, number := range result {
-		if number != want[i] {
-			t.Errorf("NewPipeline() = %v, want %v", number, want[i])
-		}
+	if !reflect.DeepEqual(result, numbers) &&
+		!reflect.DeepEqual(result, []int{1, 3, 2}) &&
+		!reflect.DeepEqual(result, []int{2, 1, 3}) &&
+		!reflect.DeepEqual(result, []int{2, 3, 1}) {
+		t.Errorf("result was: %v", result)
 	}
 }
 

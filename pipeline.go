@@ -3,12 +3,12 @@ package pipelines
 type functor func(int) int
 
 // NewPipeline returns a stage
-func NewPipeline(functors ...functor) stage {
+func NewPipeline(functors ...functor) Stage {
 	stages := genStages(functors...)
 
 	numStages := len(stages)
 
-	return func(input flow) flow {
+	return func(input Flow) Flow {
 		acc := stages[0](input)
 
 		if numStages == 1 { // if it's a stage-only flowline
