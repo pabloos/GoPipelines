@@ -1,4 +1,4 @@
-package main
+package pipelines
 
 // FanOut distribute through
 func FanOut(input flow, scheduler Scheduler, tubes ...stage) (output []flow) {

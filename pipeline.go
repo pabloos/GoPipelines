@@ -1,4 +1,4 @@
-package main
+package pipelines
 
 type functor func(int) int
 

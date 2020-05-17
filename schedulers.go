@@ -1,4 +1,4 @@
-package main
+package pipelines
 
 // Scheduler type represents a function that emits values through a an array of flows
 type Scheduler func(flow, []flow)

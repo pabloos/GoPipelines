@@ -1,4 +1,4 @@
-package main
+package pipelines
 
 // Converter passes the data from array to a flow
 func Converter(numbers ...int) flow {

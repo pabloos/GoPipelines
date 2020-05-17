@@ -1,4 +1,4 @@
-package main
+package pipelines
 
 type (
 	flow   chan int //we need a generic channel
