@@ -13,22 +13,28 @@ func FanIn(flows ...Flow) Flow {
 
 	out := make(Flow)
 
-	// TODO insert cancellation login here
-	send := func(c Flow) {
-		send(out, c, identity)
+	// cancellable := cancelWrp()
+	// sender := cancellable(send)
 
-		wg.Done()
+	// TODO insert cancellation login here
+	sendSync := func(c Flow) {
+		//TODO MAIN: extract the receiver
+		for n := range c {
+			out <- n
+		}
+
+		defer wg.Done()
 	}
 
 	wg.Add(len(flows))
 
 	for _, c := range flows { // start a send goroutine for each input channel in flows.
-		go send(c)
+		go sendSync(c)
 	}
 
 	go func() {
 		wg.Wait() //wait until all goroutines are done and close output channel
-		close(out)
+		defer close(out)
 	}()
 
 	return out
