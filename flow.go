@@ -10,7 +10,7 @@ func send(outChan Flow, inChan Flow, mod functor) {
 	// TODO MAIN: extract the receiver, and decouple from the modifier call
 	for n := range inChan {
 		// TODO CANCELLATION: handle the error and do not send the result
-		err, n := mod(n)
+		n, err := mod(n)
 
 		if err != nil {
 			cancelCh <- cancelSignal{}

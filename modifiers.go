@@ -2,44 +2,44 @@ package pipelines
 
 import "errors"
 
-func square(number int) (error, int) {
-	return nil, number * number
+func square(number int) (int, error) {
+	return number * number, nil
 }
 
-func cube(number int) (error, int) {
-	return nil, number * number * number
+func cube(number int) (int, error) {
+	return number * number * number, nil
 }
 
 var double = multBy(2)
 
-func identity(number int) (error, int) {
-	return nil, number
+func identity(number int) (int, error) {
+	return number, nil
 }
 
 func addTo(suma int) functor {
-	return func(number int) (error, int) {
-		return nil, number + suma
+	return func(number int) (int, error) {
+		return number + suma, nil
 	}
 }
 
 func subTo(sub int) functor {
-	return func(number int) (error, int) {
-		return nil, number - sub
+	return func(number int) (int, error) {
+		return number - sub, nil
 	}
 }
 
 func multBy(multiplier int) functor {
-	return func(number int) (error, int) {
-		return nil, number * multiplier
+	return func(number int) (int, error) {
+		return number * multiplier, nil
 	}
 }
 
 func divideBy(divisor int) functor {
-	return func(number int) (error, int) {
-		return nil, number / divisor
+	return func(number int) (int, error) {
+		return number / divisor, nil
 	}
 }
 
-func cancel(n int) (error, int) {
-	return errors.New("hehe"), n
+func cancel(n int) (int, error) {
+	return n, errors.New("hehe")
 }
