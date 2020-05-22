@@ -1,6 +1,6 @@
 package pipelines
 
-type functor func(int) int
+type functor func(int) (error, int)
 
 // NewPipeline returns a stage
 func NewPipeline(functors ...functor) Stage {

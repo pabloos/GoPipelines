@@ -13,17 +13,18 @@ func FanIn(flows ...Flow) Flow {
 
 	out := make(Flow)
 
-	// cancellable := cancelWrp()
-	// sender := cancellable(send)
-
 	// TODO insert cancellation login here
 	sendSync := func(c Flow) {
+		defer wg.Done()
+
 		//TODO MAIN: extract the receiver
 		for n := range c {
-			out <- n
+			select {
+			case out <- n:
+				// case <-cancelCh:
+				// 	return
+			}
 		}
-
-		defer wg.Done()
 	}
 
 	wg.Add(len(flows))

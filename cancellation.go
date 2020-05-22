@@ -1,32 +1,26 @@
 package pipelines
 
-import (
-	"context"
-)
-
-type (
-	cancelSignal struct{}
-	cancelChan   chan cancelSignal
-)
-
 // var pipFactory = cancelWrp()
 
-func cancelWrp() func(sender) sender { //cancelInstance
-	_, cancel := context.WithCancel(context.Background())
+// func cancelWrp() func(sender) sender {
+// 	return func(sender sender) sender {
+// 		return func(out Flow, in Flow, mod functor) error { // go sender
+// 			err := sender(out, in, mod)
 
-	return func(sender sender) sender { //withCancel
-		return func(out Flow, in Flow, mod functor) error { // go sender
-			err := sender(out, in, mod)
+// 			if err != nil {
+// 				return err
+// 			}
 
-			if err != nil {
-				cancel()
+// 			return nil
+// 		}
+// 	}
+// }
 
-				return err
-			}
+type cancelSignal struct{}
+type cancelChannel chan cancelSignal
 
-			// return err
+var cancelCh = make(cancelChannel)
 
-			return nil
-		}
-	}
-}
+// func init() {
+// 	cancelCh = make(cancelChannel)
+// }
