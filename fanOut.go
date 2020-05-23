@@ -1,13 +1,13 @@
 package pipelines
 
 // FanOut distribute through
-func FanOut(input Flow, scheduler Scheduler, stages ...Stage) (flows []Flow) {
+func FanOut(input Flow, scheduler Scheduler, pipelines ...Pip) (flows []Flow) {
 	cs := make([]Flow, 0)
 
-	for i := 0; i < len(stages); i++ {
+	for i := 0; i < len(pipelines); i++ {
 		cs = append(cs, make(Flow))
 
-		flows = append(flows, stages[i](cs[i]))
+		flows = append(flows, pipelines[i](cs[i]))
 	}
 
 	go schedule(scheduler)(input, cs)
