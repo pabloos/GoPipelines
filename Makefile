@@ -10,7 +10,11 @@ clean-test-cache:
 	go clean -testcache
 
 test: clean-test-cache
-	go test -v -race
+	go test -v -race -timeout 30s
+
+trace: clean-test-cache
+	go test -v -race -timeout 30s 2> trace.out
+	go tool trace trace.out
 
 # compile:
 # 	go build -race -o ${PROGRAM_NAME}
