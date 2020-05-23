@@ -35,13 +35,13 @@ numbers := []int{1, 2, 3}
 
 input := Converter(numbers...)
 
-firstStage := NewPipeline(identity)(input)
+firstStage := Pipeline(identity)(input)
 
-secondStage := FanOut(firstStage, RoundRobin, NewPipeline(double), NewPipeline(square))
+secondStage := FanOut(firstStage, RoundRobin, Pipeline(double), Pipeline(square))
 
 merged := FanIn(secondStage...)
 
-thirdStage := NewPipeline(divideBy(2))(merged)
+thirdStage := Pipeline(divideBy(2))(merged)
 
 result := Sink(thirdStage)
 

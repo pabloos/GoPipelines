@@ -10,7 +10,7 @@ func TestWOCanceWOSinkl(t *testing.T) {
 
 	input := Converter(numbers...)
 
-	firstStage := NewPipeline(multBy(2))(input)
+	firstStage := Pipeline(multBy(2))(input)
 
 	result := <-firstStage
 
@@ -30,9 +30,9 @@ func TestSimplePipelineCancel(t *testing.T) {
 
 	input := Converter(numbers...)
 
-	firstStage := NewPipeline(multBy(2), cancel, multBy(2))(input)
+	firstStage := Pipeline(multBy(2), cancel, multBy(2))(input)
 
-	secondStage := NewPipeline(identity)(firstStage)
+	secondStage := Pipeline(identity)(firstStage)
 
 	result := Sink(secondStage)
 

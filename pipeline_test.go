@@ -12,13 +12,13 @@ func TestFanInFanOut(t *testing.T) {
 
 	input := Converter(numbers...)
 
-	firstStage := NewPipeline(identity)(input)
+	firstStage := Pipeline(identity)(input)
 
-	secondStage := FanOut(firstStage, RoundRobin, NewPipeline(double), NewPipeline(square))
+	secondStage := FanOut(firstStage, RoundRobin, Pipeline(double), Pipeline(square))
 
 	merged := FanIn(secondStage...)
 
-	thirdStage := NewPipeline(divideBy(2))(merged)
+	thirdStage := Pipeline(divideBy(2))(merged)
 
 	result := Sink(thirdStage)
 
@@ -89,13 +89,13 @@ func TestNewPipeline(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			i := Converter(tt.input...)
 
-			pip := NewPipeline(tt.args.functors...)(i)
+			pip := Pipeline(tt.args.functors...)(i)
 
 			got := Sink(pip)
 
 			for i, valueGotten := range got {
 				if valueGotten != tt.want[i] {
-					t.Errorf("NewPipeline() = %v, want %v", got, tt.want)
+					t.Errorf("Pipeline() = %v, want %v", got, tt.want)
 				}
 			}
 		})
