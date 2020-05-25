@@ -19,14 +19,7 @@ func Sink(inputs Flow) []int {
 
 	wg.Add(1) //we only want to wait for just one of the goroutines
 
-	// go func() {
-	// 	for input := range inputs {
-	// 		out = append(out, input)
-	// 	}
-	// 	wg.Done()
-	// }()
-
-	go multiplexerResultCancel(cancelCh, &wg, &result)
+	// go multiplexerResultCancel(cancelCh, &wg, &result)
 	go collectResults(inputs, &wg, &result)
 
 	wg.Wait()
@@ -44,17 +37,19 @@ func collectResults(inputs Flow, wg *sync.WaitGroup, result *Result) {
 	}
 }
 
-func multiplexerResultCancel(cancel cancelChannel, wg *sync.WaitGroup, result *Result) {
-	defer wg.Done()
+// ! not efective -> delete
+// func multiplexerResultCancel(cancel cancelChannel, wg *sync.WaitGroup, result *Result) {
+// 	defer wg.Done()
 
-	for {
-		select {
-		case <-cancel:
-			result.Lock()
-			result.value = []int{} //empty results
-			result.Unlock()
+// 	for {
+// 		select {
+// 		case <-cancel:
+// 			fmt.Println("here")
+// 			result.Lock()
+// 			result.value = []int{} //empty results
+// 			result.Unlock()
 
-			return
-		}
-	}
-}
+// 			return
+// 		}
+// 	}
+// }
