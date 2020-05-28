@@ -9,6 +9,7 @@ This repo contains an approach of Golang's Pipelines and its features. It's orga
 2. refactoring
 3. autogen-stages
 4. fanInfanOut
+5. cancellation
 
 ## Some background
 
@@ -51,7 +52,6 @@ fmt.Println(result)
 ## Roadmap
 
 - add more shedulers
-- converters
 - cancellation
 - errors on observables
 - order in merge
