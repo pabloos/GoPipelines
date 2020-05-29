@@ -9,7 +9,7 @@ func BenchmarkPipeline(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		input := Converter(1+n, 2+n, 3+n, 4+n, 5+n)
 
-		Sink(pip(input))
+		Sink(pip(input), noOrder)
 	}
 }
 
@@ -19,7 +19,6 @@ func BenchmarkPipeline2(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		input := Converter(1+n, 2+n, 3+n, 4+n, 5+n, 6+n, 7+n, 8+n, 9+n)
 
-		Sink(pip(input))
-
+		Sink(pip(input), noOrder)
 	}
 }

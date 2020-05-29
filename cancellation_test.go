@@ -14,14 +14,14 @@ func TestWOCanceWOSinkl(t *testing.T) {
 
 	result := <-firstStage
 
-	if !reflect.DeepEqual(result, 2) {
-		t.Errorf("result was: %v", result)
+	if !reflect.DeepEqual(result.value, 2) {
+		t.Errorf("result was: %v", result.value)
 	}
 
 	result = <-firstStage
 
-	if !reflect.DeepEqual(result, 4) {
-		t.Errorf("result was: %v", result)
+	if !reflect.DeepEqual(result.value, 4) {
+		t.Errorf("result was: %v", result.value)
 	}
 }
 
@@ -34,7 +34,7 @@ func TestSimplePipelineCancel(t *testing.T) {
 
 	secondStage := Pipeline(identity)(firstStage)
 
-	result := Sink(secondStage)
+	result := Sink(secondStage, noOrder)
 
 	// TODO: FIX THIS
 	// ! UNDETERMINISTC

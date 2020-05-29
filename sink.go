@@ -5,8 +5,8 @@ import (
 )
 
 // Sink transforms the input channel values to an array
-func Sink(inputs Flow) []int {
-	out := make([]int, 0)
+func Sink(inputs Flow, order Order) []int {
+	out := make([]Element, 0)
 
 	var wg sync.WaitGroup
 
@@ -22,5 +22,19 @@ func Sink(inputs Flow) []int {
 
 	wg.Wait()
 
-	return out
+	orderedResults := order(out)
+
+	finalResults := getResults(orderedResults)
+
+	return finalResults
+}
+
+func getResults(elements []Element) []int {
+	newArr := make([]int, len(elements))
+
+	for i, element := range elements {
+		newArr[i] = element.value
+	}
+
+	return newArr
 }
