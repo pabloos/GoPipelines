@@ -34,7 +34,7 @@ func TestSimplePipelineCancel(t *testing.T) {
 
 	secondStage := Pipeline(identity)(firstStage)
 
-	result := Sink(secondStage, noOrder)
+	result := Sink(secondStage)
 
 	// TODO: FIX THIS
 	// ! UNDETERMINISTC

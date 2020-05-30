@@ -20,7 +20,7 @@ func TestFanInFanOut(t *testing.T) {
 
 	thirdStage := Pipeline(divideBy(2))(merged)
 
-	result := Sink(thirdStage, noOrder)
+	result := Sink(thirdStage)
 
 	t.Log(result)
 
@@ -91,7 +91,7 @@ func TestNewPipeline(t *testing.T) {
 
 			pip := Pipeline(tt.args.functors...)(i)
 
-			got := Sink(pip, noOrder)
+			got := Sink(pip)
 
 			for i, valueGotten := range got {
 				if valueGotten != tt.want[i] {

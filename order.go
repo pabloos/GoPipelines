@@ -1,46 +1,28 @@
 package pipelines
 
 // Order returns a slice with the elements ordered
-type Order func([]Element) []Element
+type Order func([]Element) Less
 
-func noOrder(input []Element) []Element {
-	return input
+// Less is the type used in the sort goland std lib to order slices
+type Less func(i, j int) bool
+
+// InOrder returns a Less function for sort golang func "in order" to get the same order
+func NoOrder(elements []Element) Less {
+	return func(i, j int) bool {
+		return elements[i].orderNum == elements[j].orderNum
+	}
 }
 
-func QuickSort(arr []Element) []Element {
-	newArr := make([]Element, len(arr))
-
-	for i, v := range arr {
-		newArr[i] = v
+// InOrder returns a Less function for sort golang func "in order" to get an ascending orderNum order
+func InOrder(elements []Element) Less {
+	return func(i, j int) bool {
+		return elements[i].orderNum < elements[j].orderNum
 	}
-
-	sort(newArr, 0, len(arr)-1)
-
-	return newArr
 }
 
-func sort(arr []Element, start int, end int) {
-	if (end - start) < 1 {
-		return
+// Reverse returns a Less function for sort golang func "in order" to get an descending orderNum order
+func Reverse(elements []Element) Less {
+	return func(i, j int) bool {
+		return elements[i].orderNum > elements[j].orderNum
 	}
-
-	pivot := arr[end]
-	splitIndex := start
-
-	for i := start; i < end; i++ {
-		if arr[i].orderNum < pivot.orderNum {
-			temp := arr[splitIndex]
-
-			arr[splitIndex] = arr[i]
-			arr[i] = temp
-
-			splitIndex++
-		}
-	}
-
-	arr[end] = arr[splitIndex]
-	arr[splitIndex] = pivot
-
-	sort(arr, start, splitIndex-1)
-	sort(arr, splitIndex+1, end)
 }
