@@ -166,6 +166,39 @@ func Test_Reverse(t *testing.T) {
 	}
 }
 
+func TestNoOrderedSink(t *testing.T) {
+	input := Converter(3, 1, 2, 5)
+
+	pipe := Pipeline(double)(input)
+
+	results := SinkWithOrder(pipe, NoOrder)
+
+	wanted := []Element{
+		Element{
+			orderNum: 0,
+			value:    6,
+		},
+		Element{
+			orderNum: 1,
+			value:    2,
+		},
+		Element{
+			orderNum: 2,
+			value:    4,
+		},
+		Element{
+			orderNum: 3,
+			value:    10,
+		},
+	}
+
+	for i, result := range results {
+		if result != wanted[i].value {
+			t.Errorf("Wanted: %d, Got: %d", result, wanted[i])
+		}
+	}
+}
+
 func TestOrderedSink(t *testing.T) {
 	input := Converter(3, 1, 2, 5)
 
@@ -189,6 +222,39 @@ func TestOrderedSink(t *testing.T) {
 		Element{
 			orderNum: 3,
 			value:    10,
+		},
+	}
+
+	for i, result := range results {
+		if result != wanted[i].value {
+			t.Errorf("Wanted: %d, Got: %d", result, wanted[i])
+		}
+	}
+}
+
+func TestReverseSink(t *testing.T) {
+	input := Converter(3, 1, 2, 5)
+
+	pipe := Pipeline(double)(input)
+
+	results := SinkWithOrder(pipe, Reverse)
+
+	wanted := []Element{
+		Element{
+			orderNum: 3,
+			value:    10,
+		},
+		Element{
+			orderNum: 2,
+			value:    4,
+		},
+		Element{
+			orderNum: 1,
+			value:    2,
+		},
+		Element{
+			orderNum: 0,
+			value:    6,
 		},
 	}
 
