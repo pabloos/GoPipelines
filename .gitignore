@@ -2,3 +2,5 @@ gopipelines.code-workspace
 .vscode
 trace.out
 .history
+coverage.out
+.coveralls.yml
