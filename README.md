@@ -18,7 +18,7 @@ This repo exists because the first post in [my blog](https://pabloos.github.io/c
 
 ## Usage
 
-### A simple example:
+### A simple example
 
 ```text
              double
@@ -52,11 +52,19 @@ fmt.Println(result)
 
 ### Order Sink (InOrder, Reverse and NoOrder)
 
+When you use fan out and fan in you could specify on the sink phase the order of the results in relation with the input order. There are three options:
+
+|  Order  |  Behaviour  | Example |
+|---------|--------------|--------|
+| InOrder | Deterministc | 1, 2 < *2 > 2, 4
+| Reverse | Deterministc | 1, 2 < *2 > 4, 2
+| NoOrder | Indeterministc | 1, 2 < *2 > 2, 4 or 4, 2 (same as the previous example with Sink)
+
 ```text
              double
            ----------
          / 1 3 -> 2 6 \
->-------<               >------> [1, 2, 3] (maybe in other order)
+>-------<               >------> [1, 2, 3]
   1 2 3  \   2 -> 4   /   /2
            ----------
              square
@@ -65,17 +73,7 @@ fmt.Println(result)
 ```
 
 ```go
-numbers := []int{1, 2, 3}
-
-input := Converter(numbers...)
-
-firstStage := Pipeline(identity)(input)
-
-secondStage := FanOut(firstStage, RoundRobin, Pipeline(double), Pipeline(square))
-
-merged := FanIn(secondStage...)
-
-thirdStage := Pipeline(divideBy(2))(merged)
+...
 
 result := SinkWithOrder(thirdStage, InOrder)
 
@@ -88,5 +86,4 @@ fmt.Println(result)
 - better cancellation
 - logging
 - errors on observables
-- tests
 - benchmarks
