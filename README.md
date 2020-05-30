@@ -1,9 +1,7 @@
 
 # Golang Pipelines
 
-![Actions Status](https://github.com/pabloos/Go-Pipelines/workflows/tests/badge.svg)
-
-[![Coverage Status](https://coveralls.io/repos/github/pabloos/Go-Pipelines/badge.svg?branch=master)](https://coveralls.io/github/pabloos/Go-Pipelines?branch=master)
+![Actions Status](https://github.com/pabloos/Go-Pipelines/workflows/tests/badge.svg)  [![Coverage Status](https://coveralls.io/repos/github/pabloos/Go-Pipelines/badge.svg?branch=master)](https://coveralls.io/github/pabloos/Go-Pipelines?branch=master) ![dep Badge](https://img.shields.io/badge/dependencies-none-informational) ![MIT License badge](https://img.shields.io/badge/license-MIT-blue)
 
 This repo contains an approach of Golang's Pipelines and its features. Its features are organized in branches, so you can go through the different milestones:
 
