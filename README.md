@@ -3,13 +3,16 @@
 
 ![Actions Status](https://github.com/pabloos/Go-Pipelines/workflows/tests/badge.svg)
 
-This repo contains an approach of Golang's Pipelines and its features. It's organized on branches, so you can go through the different milestones:
+[![Coverage Status](https://coveralls.io/repos/github/pabloos/Go-Pipelines/badge.svg?branch=master)](https://coveralls.io/github/pabloos/Go-Pipelines?branch=master)
+
+This repo contains an approach of Golang's Pipelines and its features. Its features are organized in branches, so you can go through the different milestones:
 
 1. original-sketch: the original approach discussed on the [go blog](https://blog.golang.org/pipelines)
 2. refactoring
 3. autogen-stages
 4. fanInfanOut
 5. cancellation
+6. order
 
 ## Some background
 
@@ -84,9 +87,8 @@ fmt.Println(result)
 ## Roadmap
 
 - add more shedulers
-- cancellation
+- better cancellation
+- logging
 - errors on observables
-- order in merge
 - tests
 - benchmarks
-- buffered channels?
