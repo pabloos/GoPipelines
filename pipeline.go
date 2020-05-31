@@ -1,9 +1,7 @@
 package pipelines
 
-type Pip Stage
-
-// Pipeline returns a stage
-func Pipeline(functors ...functor) Pip {
+// Pipeline returns a Pip
+func Pipeline(functors ...functor) Stage {
 	stages := genStages(functors...)
 
 	numStages := len(stages)

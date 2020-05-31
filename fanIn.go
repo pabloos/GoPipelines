@@ -4,9 +4,6 @@ import (
 	"sync"
 )
 
-// TODO implements a decorator that cares about the order of delivery order of inputs
-// following the strategy defined by the user ([pre, in, post] - order => as it comes, tree-based, stacked)
-
 // FanIn merges n flows to 1
 func FanIn(flows ...Flow) Flow {
 	var wg sync.WaitGroup
