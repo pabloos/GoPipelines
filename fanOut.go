@@ -1,7 +1,7 @@
 package pipelines
 
 // FanOut distribute through
-func FanOut(input Flow, scheduler Scheduler, pipelines ...Pip) (flows []Flow) {
+func FanOut(input Flow, scheduler Scheduler, pipelines ...Stage) (flows []Flow) {
 	cs := make([]Flow, 0)
 
 	for i := 0; i < len(pipelines); i++ {

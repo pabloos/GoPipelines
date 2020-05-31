@@ -19,30 +19,30 @@ func Test_noOrder(t *testing.T) {
 			name: "1,2,3 => 1,2,3",
 			args: args{
 				[]Element{
-					Element{
+					{
 						value:    4,
 						orderNum: 1,
 					},
-					Element{
+					{
 						value:    32,
 						orderNum: 2,
 					},
-					Element{
+					{
 						value:    1,
 						orderNum: 3,
 					},
 				},
 			},
 			want: []Element{
-				Element{
+				{
 					value:    4,
 					orderNum: 1,
 				},
-				Element{
+				{
 					value:    32,
 					orderNum: 2,
 				},
-				Element{
+				{
 					value:    1,
 					orderNum: 3,
 				},
@@ -72,30 +72,30 @@ func Test_InOrder(t *testing.T) {
 			name: "1,3,2 => 1,2,3",
 			args: args{
 				[]Element{
-					Element{
+					{
 						value:    4,
 						orderNum: 1,
 					},
-					Element{
+					{
 						value:    1,
 						orderNum: 3,
 					},
-					Element{
+					{
 						value:    32,
 						orderNum: 2,
 					},
 				},
 			},
 			want: []Element{
-				Element{
+				{
 					value:    4,
 					orderNum: 1,
 				},
-				Element{
+				{
 					value:    32,
 					orderNum: 2,
 				},
-				Element{
+				{
 					value:    1,
 					orderNum: 3,
 				},
@@ -125,31 +125,30 @@ func Test_Reverse(t *testing.T) {
 			name: "2,3,1 => 1,2,3",
 			args: args{
 				[]Element{
-
-					Element{
+					{
 						value:    32,
 						orderNum: 2,
 					},
-					Element{
+					{
 						value:    1,
 						orderNum: 3,
 					},
-					Element{
+					{
 						value:    4,
 						orderNum: 1,
 					},
 				},
 			},
 			want: []Element{
-				Element{
+				{
 					value:    1,
 					orderNum: 3,
 				},
-				Element{
+				{
 					value:    32,
 					orderNum: 2,
 				},
-				Element{
+				{
 					value:    4,
 					orderNum: 1,
 				},
@@ -174,19 +173,19 @@ func TestNoOrderedSink(t *testing.T) {
 	results := SinkWithOrder(pipe, NoOrder)
 
 	wanted := []Element{
-		Element{
+		{
 			orderNum: 0,
 			value:    6,
 		},
-		Element{
+		{
 			orderNum: 1,
 			value:    2,
 		},
-		Element{
+		{
 			orderNum: 2,
 			value:    4,
 		},
-		Element{
+		{
 			orderNum: 3,
 			value:    10,
 		},
@@ -207,19 +206,19 @@ func TestOrderedSink(t *testing.T) {
 	results := SinkWithOrder(pipe, InOrder)
 
 	wanted := []Element{
-		Element{
+		{
 			orderNum: 0,
 			value:    6,
 		},
-		Element{
+		{
 			orderNum: 1,
 			value:    2,
 		},
-		Element{
+		{
 			orderNum: 2,
 			value:    4,
 		},
-		Element{
+		{
 			orderNum: 3,
 			value:    10,
 		},
@@ -240,19 +239,19 @@ func TestReverseSink(t *testing.T) {
 	results := SinkWithOrder(pipe, Reverse)
 
 	wanted := []Element{
-		Element{
+		{
 			orderNum: 3,
 			value:    10,
 		},
-		Element{
+		{
 			orderNum: 2,
 			value:    4,
 		},
-		Element{
+		{
 			orderNum: 1,
 			value:    2,
 		},
-		Element{
+		{
 			orderNum: 0,
 			value:    6,
 		},
