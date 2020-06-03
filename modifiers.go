@@ -1,6 +1,9 @@
 package pipelines
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 func square(number int) (int, error) {
 	return number * number, nil
@@ -41,5 +44,6 @@ func divideBy(divisor int) functor {
 }
 
 func cancel(n int) (int, error) {
+	fmt.Println("cancel transformer called")
 	return n, errors.New("hehe")
 }

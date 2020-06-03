@@ -1,5 +1,7 @@
 package pipelines
 
+import "context"
+
 type (
 	// Stage represents the different phases of a Pipeline, which it's a Stage itself
 	Stage func(Flow) Flow
@@ -7,39 +9,24 @@ type (
 	stages []Stage
 )
 
-func genStages(functors ...functor) stages {
+func genStages(ctx context.Context, errChs []errorChannel, functors ...functor) stages {
 	stages := make(stages, 0)
 
-	for _, functor := range functors {
-		stages = append(stages, getStage(functor))
+	for i, functor := range functors {
+		stages = append(stages, getStage(ctx, errChs[i], functor))
 	}
 
 	return stages
 }
 
-func getStage(funct functor) Stage {
+func getStage(ctx context.Context, errCh errorChannel, funct functor) Stage {
 	sender := sendAndClose(send, closeFlow)
 
 	return func(input Flow) Flow {
 		output := make(Flow)
 
-		go sender(output, input, funct)
+		go sender(ctx, errCh, output, input, funct)
 
 		return output
-	}
-}
-
-// TODO insert cancellation logic here
-func createBufStage(bufLen int) func(functor) Stage {
-	sender := sendAndClose(send, closeFlow)
-
-	return func(funct functor) Stage {
-		return func(input Flow) Flow {
-			output := make(Flow, bufLen)
-
-			go sender(output, input, funct)
-
-			return output
-		}
 	}
 }

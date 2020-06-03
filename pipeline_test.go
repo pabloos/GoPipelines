@@ -1,28 +1,30 @@
 package pipelines
 
 import (
+	"context"
 	"reflect"
 	"testing"
 )
 
-// TODO non deterministc aproach
-// tests runs in a deterministc way, while fan in and out does it with a non deterministic deliver order
+// non deterministc aproach
 func TestFanInFanOut(t *testing.T) {
+	ctx, cancelCtx := context.WithCancel(context.Background())
+
+	defer cancelCtx()
+
 	numbers := []int{1, 2, 3}
 
 	input := Converter(numbers...)
 
-	firstStage := Pipeline(identity)(input)
+	firstStage := Pipeline(ctx, identity)(input)
 
-	secondStage := FanOut(firstStage, RoundRobin, Pipeline(double), Pipeline(square))
+	secondStage := FanOut(ctx, firstStage, RoundRobin, Pipeline(ctx, double), Pipeline(ctx, square))
 
-	merged := FanIn(secondStage...)
+	merged := FanIn(ctx, secondStage...)
 
-	thirdStage := Pipeline(divideBy(2))(merged)
+	thirdStage := Pipeline(ctx, divideBy(2))(merged)
 
 	result := Sink(thirdStage)
-
-	t.Log(result)
 
 	if !reflect.DeepEqual(result, numbers) &&
 		!reflect.DeepEqual(result, []int{1, 3, 2}) &&
@@ -87,9 +89,13 @@ func TestNewPipeline(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+
+			defer cancel()
+
 			i := Converter(tt.input...)
 
-			pip := Pipeline(tt.args.functors...)(i)
+			pip := Pipeline(ctx, tt.args.functors...)(i)
 
 			got := Sink(pip)
 

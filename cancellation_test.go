@@ -1,45 +1,47 @@
 package pipelines
 
 import (
+	"context"
 	"reflect"
 	"testing"
 )
 
 func TestWOCanceWOSinkl(t *testing.T) {
+	ctx, cancelCtx := context.WithCancel(context.Background())
+
+	defer cancelCtx()
+
 	numbers := []int{1, 2, 3}
 
 	input := Converter(numbers...)
 
-	firstStage := Pipeline(multBy(2))(input)
+	firstStage := Pipeline(ctx, multBy(2), cancel)(input)
 
-	result := <-firstStage
+	result := Sink(firstStage)
+	wanted := []int{}
 
-	if !reflect.DeepEqual(result.value, 2) {
-		t.Errorf("result was: %v", result.value)
-	}
-
-	result = <-firstStage
-
-	if !reflect.DeepEqual(result.value, 4) {
-		t.Errorf("result was: %v", result.value)
+	if !reflect.DeepEqual(result, wanted) {
+		t.Errorf("result was: %v, but wanted: ", result)
 	}
 }
 
 func TestSimplePipelineCancel(t *testing.T) {
+	ctx, cancelCtx := context.WithCancel(context.Background())
+
+	defer cancelCtx()
+
 	numbers := []int{1, 2, 3}
 
 	input := Converter(numbers...)
 
-	firstStage := Pipeline(multBy(2), cancel, multBy(2))(input)
+	firstStage := Pipeline(ctx, cancel, multBy(2))(input)
 
-	secondStage := Pipeline(identity)(firstStage)
+	secondStage := Pipeline(ctx, identity)(firstStage)
 
 	result := Sink(secondStage)
+	wanted := []int{}
 
-	// TODO: FIX THIS
-	// ! UNDETERMINISTC
-	// * some times this produces a negative wg count on the sink phase
-	if !reflect.DeepEqual(result, []int{}) && !reflect.DeepEqual(result, []int{4, 8}) {
+	if !reflect.DeepEqual(result, wanted) {
 		t.Errorf("result was: %v", result)
 	}
 }

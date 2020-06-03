@@ -1,7 +1,9 @@
 package pipelines
 
+import "context"
+
 // FanOut distribute through
-func FanOut(input Flow, scheduler Scheduler, pipelines ...Stage) (flows []Flow) {
+func FanOut(ctx context.Context, input Flow, scheduler Scheduler, pipelines ...Stage) (flows []Flow) {
 	cs := make([]Flow, 0)
 
 	for i := 0; i < len(pipelines); i++ {
@@ -10,7 +12,7 @@ func FanOut(input Flow, scheduler Scheduler, pipelines ...Stage) (flows []Flow) 
 		flows = append(flows, pipelines[i](cs[i]))
 	}
 
-	go schedule(scheduler)(input, cs)
+	go schedule(scheduler)(ctx, input, cs)
 
 	return flows
 }
