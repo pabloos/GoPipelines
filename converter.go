@@ -2,9 +2,6 @@ package pipelines
 
 import "sync/atomic"
 
-// TODO set a wrapper object that encapsulates the deliever order
-// TODO add the cancellation channel from here
-
 // Converter passes the data from array to a flow
 func Converter(numbers ...int) Flow {
 	var orderNum uint64

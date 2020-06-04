@@ -1,6 +1,7 @@
 package pipelines
 
 import (
+	"context"
 	"reflect"
 	"sort"
 	"testing"
@@ -166,9 +167,13 @@ func Test_Reverse(t *testing.T) {
 }
 
 func TestNoOrderedSink(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	defer cancel()
+
 	input := Converter(3, 1, 2, 5)
 
-	pipe := Pipeline(double)(input)
+	pipe := Pipeline(ctx, double)(input)
 
 	results := SinkWithOrder(pipe, NoOrder)
 
@@ -199,9 +204,13 @@ func TestNoOrderedSink(t *testing.T) {
 }
 
 func TestOrderedSink(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	defer cancel()
+
 	input := Converter(3, 1, 2, 5)
 
-	pipe := Pipeline(double)(input)
+	pipe := Pipeline(ctx, double)(input)
 
 	results := SinkWithOrder(pipe, InOrder)
 
@@ -232,9 +241,13 @@ func TestOrderedSink(t *testing.T) {
 }
 
 func TestReverseSink(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	defer cancel()
+
 	input := Converter(3, 1, 2, 5)
 
-	pipe := Pipeline(double)(input)
+	pipe := Pipeline(ctx, double)(input)
 
 	results := SinkWithOrder(pipe, Reverse)
 
@@ -259,7 +272,7 @@ func TestReverseSink(t *testing.T) {
 
 	for i, result := range results {
 		if result != wanted[i].value {
-			t.Errorf("Wanted: %d, Got: %d", result, wanted[i])
+			t.Errorf("Wanted: %d, Got: %d", wanted[i], result)
 		}
 	}
 }

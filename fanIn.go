@@ -1,16 +1,16 @@
 package pipelines
 
 import (
+	"context"
 	"sync"
 )
 
 // FanIn merges n flows to 1
-func FanIn(flows ...Flow) Flow {
+func FanIn(ctx context.Context, flows ...Flow) Flow {
 	var wg sync.WaitGroup
 
 	out := make(Flow)
 
-	// TODO insert cancellation login here
 	sendSync := func(c Flow) {
 		defer wg.Done()
 
@@ -18,8 +18,8 @@ func FanIn(flows ...Flow) Flow {
 		for n := range c {
 			select {
 			case out <- n:
-				// case <-cancelCh:
-				// 	return
+			case <-ctx.Done():
+				return
 			}
 		}
 	}

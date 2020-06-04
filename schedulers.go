@@ -1,15 +1,17 @@
 package pipelines
 
+import "context"
+
 // Scheduler type represents a function that emits values through a an array of Flows
-type Scheduler func(Flow, []Flow)
+type Scheduler func(context.Context, Flow, []Flow)
 
 // Schedule prepares a scheduler to operate:
 // - it injects the close channel action by a decorator pattern
 func schedule(scheduler Scheduler) Scheduler {
-	return func(ch Flow, cs []Flow) {
+	return func(ctx context.Context, ch Flow, cs []Flow) {
 		defer closeChannels(cs)
 
-		scheduler(ch, cs)
+		scheduler(ctx, ch, cs)
 	}
 }
 
@@ -20,9 +22,7 @@ func closeChannels(channels []Flow) {
 }
 
 // RoundRobin implements an scheduler that continuously switches between the outputs
-// TODO insert cancellation logic here
-// maybe it's enough with an implicit cancelation (as it's implemented now)
-func RoundRobin(ch Flow, cs []Flow) {
+func RoundRobin(ctx context.Context, ch Flow, cs []Flow) {
 	for {
 		for _, c := range cs {
 			select {
@@ -32,6 +32,8 @@ func RoundRobin(ch Flow, cs []Flow) {
 				}
 
 				c <- val
+			case <-ctx.Done():
+				return
 			}
 		}
 	}

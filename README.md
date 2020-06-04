@@ -32,23 +32,55 @@ This repo exists because the first post in [my blog](https://pabloos.github.io/c
 1st Stage   2nd Stage   3rd Stage
 ```
 
+The code aims to be as declarative as possible:
+
 ```go
+ctx, cancelCtx := context.WithCancel(context.Background())
+
+defer cancelCtx() // always remenber to finish the pipeline running cancelling his context for avoiding memory leaks
+
 numbers := []int{1, 2, 3}
 
 input := Converter(numbers...)
 
-firstStage := Pipeline(identity)(input)
+firstStage := Pipeline(ctx, identity)(input)
 
-secondStage := FanOut(firstStage, RoundRobin, Pipeline(double), Pipeline(square))
+secondStage := FanOut(ctx, firstStage, RoundRobin, Pipeline(ctx, double), Pipeline(ctx, square))
 
-merged := FanIn(secondStage...)
+merged := FanIn(ctx, secondStage...)
 
-thirdStage := Pipeline(divideBy(2))(merged)
+thirdStage := Pipeline(ctx, divideBy(2))(merged)
 
 result := Sink(thirdStage)
 
 fmt.Println(result)
 ```
+
+### Cancellation
+
+```text
+
+>--------------------------------> []
+   1, 3, 3    mult(2)     error
+```
+
+```go
+ctx, cancelCtx := context.WithCancel(context.Background())
+
+defer cancelCtx()
+
+numbers := []int{1, 2, 3}
+
+input := Converter(numbers...)
+
+firstStage := Pipeline(ctx, multBy(2), errFunc)(input)
+
+result := Sink(firstStage)
+
+fmt.Println(result) // []
+```
+
+When a stage finds an error the whole context gets cancelled and the whole pipeline closes, being cancelled also all the pipelines with the same context.
 
 ### Order Sink (InOrder, Reverse and NoOrder)
 
@@ -83,7 +115,6 @@ fmt.Println(result)
 ## Roadmap
 
 - add more shedulers
-- better cancellation
 - logging
 - errors on observables
 - benchmarks
